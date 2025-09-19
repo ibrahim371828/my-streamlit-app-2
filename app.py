@@ -11,8 +11,7 @@ import gdown
 # =========================
 # Configure Gemini
 # =========================
-# genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-genai.configure(api_key="AIzaSyCJKiversT7E10Y94kxDOmBvUduRtaYegs")
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 gemini_model = genai.GenerativeModel("gemini-1.5-flash")
 
 # =========================
@@ -244,3 +243,4 @@ sample = pd.DataFrame([{
 if st.button("🔮 Predict Price"):
     pred_price = model_rf.predict(sample)[0]
     st.success(f"✅ Estimated Price: {pred_price:.2f} lacs")
+
