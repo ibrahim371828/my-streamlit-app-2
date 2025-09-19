@@ -81,10 +81,20 @@ if not os.path.exists(MODEL_PATH):
     gdown.download(url, MODEL_PATH, quiet=False)
 
 # Load model
-model_rf = joblib.load(MODEL_PATH)
+@st.cache_resource
+def load_model():
+    return joblib.load(MODEL_PATH)
+
+model_rf = load_model()
+
 
 # Load Data
-df_original = pd.read_csv("dataset.csv")
+@st.cache_data
+def load_data():
+    return pd.read_csv("dataset.csv")
+
+df_original = load_data()
+
 
 # ===============================
 # Streamlit App
@@ -243,4 +253,5 @@ sample = pd.DataFrame([{
 if st.button("🔮 Predict Price"):
     pred_price = model_rf.predict(sample)[0]
     st.success(f"✅ Estimated Price: {pred_price:.2f} lacs")
+
 
