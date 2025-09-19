@@ -47,25 +47,30 @@ def extract_car_details(file):
 
     raw_output = response.text.strip().split("\n")
     car_data = {}
+
     for line in raw_output:
         if ": " in line:
             key, value = line.split(": ", 1)
             key = key.strip().lower().lstrip("- ")
             value = value.strip()
 
-            # Convert numeric fields
+            # Safely handle numeric fields with defaults
             if key == "year":
-                value = int(value) if value.isdigit() else 2018
+                if value.isdigit():
+                    value = int(value)
+                else:
+                    value = 2018
+
             elif key == "engine_cc":
                 tokens = value.split()
                 value = int(tokens[0]) if tokens and tokens[0].isdigit() else 1300
-            
+
             elif key == "km_driven":
                 tokens = value.replace(",", "").split()
                 value = int(tokens[0]) if tokens and tokens[0].isdigit() else 50000
 
-
             car_data[key] = value
+
     return car_data
 
 
@@ -257,6 +262,7 @@ sample = pd.DataFrame([{
 if st.button("🔮 Predict Price"):
     pred_price = model_rf.predict(sample)[0]
     st.success(f"✅ Estimated Price: {pred_price:.2f} lacs")
+
 
 
 
