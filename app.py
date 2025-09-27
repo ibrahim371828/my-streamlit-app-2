@@ -159,6 +159,7 @@ def normalize_location(value):
 # ===============================
 # Prefilled Inputs
 # ===============================
+# --- Select Make ---
 all_makes = sorted(df_original['Make'].unique())
 make = st.selectbox(
     "Car Make",
@@ -167,16 +168,17 @@ make = st.selectbox(
     if normalize_make_model_variant(car_data.get("make", "")) in all_makes else 0
 )
 
-all_models = sorted(df_original['Model'].unique())
+# --- Filter Models based on selected Make ---
+models_for_make = sorted(df_original[df_original['Make'] == make]['Model'].unique())
 model_name = st.selectbox(
     "Car Model",
-    all_models,
-    index=all_models.index(normalize_make_model_variant(car_data.get("model", "")))
-    if normalize_make_model_variant(car_data.get("model", "")) in all_models else 0
+    models_for_make,
+    index=models_for_make.index(normalize_make_model_variant(car_data.get("model", "")))
+    if normalize_make_model_variant(car_data.get("model", "")) in models_for_make else 0
 )
 
-variants_for_model = df_original[df_original['Model'] == model_name]['Variant'].dropna().unique()
-variants_for_model = sorted(variants_for_model) if len(variants_for_model) > 0 else ["Unknown"]
+# --- Filter Variants based on selected Model ---
+variants_for_model = sorted(df_original[df_original['Model'] == model_name]['Variant'].unique())
 variant = st.selectbox(
     "Car Variant",
     variants_for_model,
@@ -262,6 +264,7 @@ sample = pd.DataFrame([{
 if st.button("🔮 Predict Price"):
     pred_price = model_rf.predict(sample)[0]
     st.success(f"✅ Estimated Price: {pred_price:.2f} lacs")
+
 
 
 
